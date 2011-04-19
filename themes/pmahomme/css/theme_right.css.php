@@ -88,6 +88,9 @@ a:hover {
     -webkit-border-radius:5px;
     border-radius:5px;
 }
+
+#initials_table td{padding:8px !important}
+
 #initials_table a {
     border:1px solid #aaa;
     background:#fff;
@@ -97,6 +100,7 @@ a:hover {
     border-radius:5px;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#cccccc));
     background: -moz-linear-gradient(top,  #ffffff,  #cccccc);
+    background: -o-linear-gradient(top,  #ffffff,  #cccccc);
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cccccc');
 }
 
@@ -115,9 +119,8 @@ th {
     background:         #f3f3f3;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#cccccc));
     background: -moz-linear-gradient(top,  #ffffff,  #cccccc);
+    background: -o-linear-gradient(top,  #ffffff,  #cccccc);
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cccccc');
-
-
 }
 
 a img {
@@ -188,12 +191,14 @@ input[type=submit]{
 
 	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#cccccc));
 	background: -moz-linear-gradient(top,  #ffffff,  #cccccc);
+    background: -o-linear-gradient(top,  #ffffff,  #cccccc);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cccccc');
 }
 
 input[type=submit]:hover{	position: relative;
 	background: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#dddddd));
 	background: -moz-linear-gradient(top,  #cccccc,  #dddddd);
+    background: -o-linear-gradient(top,  #cccccc,  #dddddd);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#dddddd');
     cursor:pointer;
 }
@@ -253,7 +258,7 @@ button {
 table caption,
 table th,
 table td {
-    padding:            0.5em;
+    padding:            0.3em;
     margin:             0.1em;
     vertical-align:     top;
     text-shadow:0 1px 0 #FFFFFF;
@@ -284,6 +289,15 @@ select{
     color:#333333;
     padding:3px;
     background:url(./themes/pmahomme/img/input_bg.gif)
+}
+
+select[multiple] {
+    background: #fff;
+    background: -webkit-gradient(linear, center top, center bottom, from(#fff), color-stop(0.8, #f1f1f1), to(#fbfbfb));
+    background: -webkit-linear-gradient(#fff, #f1f1f1 80%, #fbfbfb);
+    background: -moz-linear-gradient(#fff, #f1f1f1 80%, #fbfbfb);
+    /* none for Opera 11.10 as <option>s always have solid white background */
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2');
 }
 
 /******************************************************************************/
@@ -337,12 +351,14 @@ button.mult_submit {
 table tr.odd th,
 .odd {
     background: #fff;
+    filter: none;
 }
 
 /* even items 2,4,6,8,... */
 table tr.even th,
 .even {
     background: #f3f3f3;
+    filter: none;
 }
 
 /* odd table rows 1,3,5,7,... */
@@ -570,12 +586,21 @@ div.footnotes {
     <?php } else { ?>
     padding:            0.3em;
     <?php } ?>
+    
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
     border-radius:5px;
-    -moz-box-shadow: 0px 1px 2px #fff inset;
-    -webkit-box-shadow: 0px 1px 2px #fff inset;
+    
+    -moz-box-shadow: 0 1px 1px #fff inset;
+    -webkit-box-shadow: 0 1px 1px #fff inset;
+    box-shadow:  0 1px 1px #fff inset;
 }
+
+.success  a{text-decoration:underline;}
+.notice a{text-decoration:underline;}
+.warning  a{text-decoration:underline;}
+.error a{text-decoration:underline;}
+.footnotes a{text-decoration:underline;}
 
 .success {
     color:              #000000;
@@ -599,13 +624,13 @@ div.success {
 }
 
 .notice, .footnotes {
-    color:              #000000;
-    background-color:   #ffeda4;
+    color:              #3a6c7e;
+    background-color:   #e8eef1;
 }
 h1.notice,
 div.notice,
 div.footnotes {
-    border-color:       #eccf5b;
+    border-color:       #3a6c7e;
     <?php if ($GLOBALS['cfg']['ErrorIconic']) { ?>
     background-image:   url(<?php echo $_SESSION['PMA_Theme']->getImgPath(); ?>s_notice.png);
     background-repeat:  no-repeat;
@@ -624,6 +649,8 @@ div.footnotes {
     color:              #000;
     background:url(./themes/pmahomme/img/tab_warning_bg.png) 50% 0% #f2baba;
 }
+
+
 p.warning,
 h1.warning,
 div.warning {
@@ -644,8 +671,8 @@ div.warning {
 
 .error {
 	border:1px solid maroon !important;
-    color: #fff;
-    background:url(./themes/pmahomme/img/tab_warning_bg.png) 50% 0% #e97777;
+    color: #000;
+    background:pink;
 }
 
 h1.error,
@@ -664,6 +691,8 @@ div.error {
 div.error h1 {
     border-color:       #ff0000;
 }
+
+
 
 .confirmation {
     color:              #000000;
@@ -915,6 +944,9 @@ ul#topmenu ul {
     padding:            0.1em 0.3em 0.1em 0.3em;
 }
 
+#topmenu .warning {font-size:1em !important; background:#f3f3f3; }
+#topmenu .warning a span{color:#ddd !important;}
+
 ul#topmenu ul {
     -moz-box-shadow:    1px 1px 6px #ddd;
     -webkit-box-shadow: 2px 2px 3px #666;
@@ -980,6 +1012,7 @@ ul#topmenu span.tab,
 a.warning,
 ul#topmenu span.tabcaution {
     cursor:             url(<?php echo $_SESSION['PMA_Theme']->getImgPath(); ?>error.ico), default;
+    color:#ccc;
 }
 <?php } ?>
 /* end topmenu */
@@ -1290,11 +1323,13 @@ div#querywindowcontainer fieldset {
     */
 	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#cccccc));
 	background: -moz-linear-gradient(top,  #ffffff,  #cccccc);
+    background: -o-linear-gradient(top,  #ffffff,  #cccccc);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cccccc');
 }
 #sectionlinks a:hover, #statuslinks a:hover{
 	background: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#dddddd));
 	background: -moz-linear-gradient(top,  #cccccc,  #dddddd);
+    background: -o-linear-gradient(top,  #cccccc,  #dddddd);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#dddddd');
 }
 
@@ -1650,8 +1685,7 @@ table#serverconnection_trg_local  {
     margin-bottom: 0;
     margin-left: auto;
     padding: 5px;   /** Keep a little space on the sides of the text */
-    min-width: 70px;
-    max-width: 350px;   /** This value might have to be changed */
+    width: 350px;
 
     z-index: 1100;      /** If this is not kept at a high z-index, the jQueryUI modal dialogs (z-index:1000) might hide this */
     text-align: center;
@@ -1728,12 +1762,14 @@ table#serverconnection_trg_local  {
 
 	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#cccccc));
 	background: -moz-linear-gradient(top,  #ffffff,  #cccccc);
+    background: -o-linear-gradient(top,  #ffffff,  #cccccc);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cccccc');
     cursor: pointer;
 }
 #buttonGo:hover{
 	background: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#dddddd));
 	background: -moz-linear-gradient(top,  #cccccc,  #dddddd);
+    background: -o-linear-gradient(top,  #cccccc,  #dddddd);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#dddddd');
 }
 
@@ -1910,21 +1946,21 @@ iframe.IE_hack {
     -moz-border-radius:5px 5px 0 0;
     -webkit-border-radius:5px 5px 0 0;
     border-radius:5px 5px 0 0;
-    background:#d5d5d5;
-    color:#fff;
+    background:#f2f2f2;
+    color:#555;
+    text-shadow: 0 1px 0 #fff;
 }
 
 .config-form ul.tabs li a:hover,
-.config-form ul.tabs li a:active,
-.config-form ul.tabs li a.active {
-    /*margin:           0;*/
-    /*padding:          0.1em 0.6em 0.2em;*/
+.config-form ul.tabs li a:active {
+    background:#e5e5e5;
 }
 
 .config-form ul.tabs li a.active {
     background-color: #fff;
     margin-top:1px;
     color:#000;
+    text-shadow: none;
 }
 
 .config-form fieldset {
@@ -1999,6 +2035,7 @@ iframe.IE_hack {
 
 .config-form fieldset th, .config-form fieldset td {
     border-top: 1px <?php echo $GLOBALS['cfg']['BgTwo']; ?> solid;
+    border-right: none;
 }
 
 fieldset .group-header th {
@@ -2111,7 +2148,7 @@ fieldset .disabled-field td {
     margin-bottom: 0.5em;
 }
 
-#table_columns input, select {
+#table_columns input, #table_columns select {
     width:              14em;
     box-sizing:         border-box;
     -ms-box-sizing:     border-box;

@@ -264,13 +264,15 @@ $(document).ready(function() {
                 $('.success').fadeOut();
                 $('.sqlquery_message').fadeOut();
                 // show a message that stays on screen
-                $('#sqlqueryform').before(data.message);
-                // and display the query
-                $('<div class="sqlquery_message"></div>')
-                 .html(data.sql_query)
-                 .insertBefore('#sqlqueryform');
-                // unnecessary div that came from data.sql_query
-                $('.notice').remove();
+                if (typeof data.sql_query != 'undefined') {
+                    $('<div class="sqlquery_message"></div>')
+                     .html(data.sql_query)
+                     .insertBefore('#sqlqueryform');
+                    // unnecessary div that came from data.sql_query
+                    $('.notice').remove();
+                } else {
+                    $('#sqlqueryform').before(data.message);
+                }
                 $('#sqlqueryresults').show();
                 // this happens if a USE command was typed
                 if (typeof data.reload != 'undefined') {
@@ -783,6 +785,10 @@ $(document).ready(function() {
          */
         var relation_fields = {};
         /**
+         * @var relational_display string 'K' if relational key, 'D' if relational display column 
+         */
+        var relational_display = $("#relational_display_K").attr('checked') ? 'K' : 'D';
+        /**
          * @var transform_fields    Array containing the name/value pairs for transformed fields
          */
         var transform_fields = {};
@@ -798,15 +804,16 @@ $(document).ready(function() {
 
         var need_to_post = false;
         
-        var new_clause='';
-        var prev_index=-1;
+        var new_clause = '';
+        var prev_index = -1;
 
         $input_siblings.each(function() {
             /** @lends jQuery */
             /**
              * @var this_field  Object referring to this field (<td>)
              */
-                var $this_field = $(this);
+            var $this_field = $(this);
+
             /**
              * @var field_name  String containing the name of this field.
              * @see getFieldName()
@@ -859,7 +866,7 @@ $(document).ready(function() {
                     }
                 }
                     if(where_clause.indexOf(field_name) > prev_index){
-                        new_clause += '`'+window.parent.table+'`.'+'`' + field_name + "` = '"+this_field_params[field_name].replace(/'/g,"''")+"'"+' AND ';
+                        new_clause += '`' + window.parent.table + '`.' + '`' + field_name + "` = '" + this_field_params[field_name].replace(/'/g,"''") + "'" + ' AND ';
                     }
                 if (this_field_params[field_name] != $this_field.data('original_data')) {
                     sql_query += ' `' + field_name + "`='" + this_field_params[field_name].replace(/'/g, "''") + "' , ";
@@ -874,8 +881,8 @@ $(document).ready(function() {
 
         //Remove the last ',' appended in the above loop
         sql_query = sql_query.replace(/,\s$/, '');
-        new_clause=new_clause.substring(0,new_clause.length-5);
-        new_clause=PMA_urlencode(new_clause);
+        new_clause = new_clause.substring(0, new_clause.length-5);
+        new_clause = PMA_urlencode(new_clause);
         sql_query += ' WHERE ' + PMA_urldecode(where_clause);
         /**
          * @var rel_fields_list  String, url encoded representation of {@link relations_fields}
@@ -888,8 +895,8 @@ $(document).ready(function() {
         var transform_fields_list = $.param(transform_fields);
 
         // if inline_edit is successful, we need to go back to default view
-        var $del_hide=$(this).parent();
-        var $chg_submit=$(this);
+        var $del_hide = $(this).parent();
+        var $chg_submit = $(this);
 
         if (need_to_post) {
             // Make the Ajax post after setting all parameters
@@ -907,6 +914,7 @@ $(document).ready(function() {
                             'rel_fields_list' : rel_fields_list,
                             'do_transformations' : transformation_fields,
                             'transform_fields_list' : transform_fields_list,
+                            'relational_display' : relational_display,
                             'goto' : 'sql.php',
                             'submit_type' : 'save'
                           };
@@ -915,17 +923,16 @@ $(document).ready(function() {
                 if(data.success == true) {
                     PMA_ajaxShowMessage(data.message);
                     if(disp_mode == 'vertical') {
-                        $this_td.parents('tbody').find('tr').find('.where_clause:nth('+this_td_index+')').attr('value',new_clause);
+                        $this_td.parents('tbody').find('tr').find('.where_clause:nth(' + this_td_index + ')').attr('value', new_clause);
                     }
                     else {
-                        $this_td.parent('tr').find('.where_clause').attr('value',new_clause);
+                        $this_td.parent('tr').find('.where_clause').attr('value', new_clause);
                     }
                     // remove possible previous feedback message
                     $('#result_query').remove();
-                    if (typeof data.result_query != 'undefined') {
+                    if (typeof data.sql_query != 'undefined') {
                         // display feedback
-                        $('#sqlqueryresults').prepend('<div id="result_query" align="left"></div>');
-                        $('#result_query').prepend(data.result_query);
+                        $('#sqlqueryresults').prepend(data.sql_query);
                     }
                     PMA_unInlineEditRow($del_hide, $chg_submit, $this_td, $input_siblings, data, disp_mode);
                 } else {
@@ -1024,7 +1031,7 @@ function PMA_unInlineEditRow($del_hide, $chg_submit, $this_td, $input_siblings, 
                     if (typeof data.relations != 'undefined') {
                         $.each(data.relations, function(key, value) {
                             if(key == field_name) {
-                                new_html = $(value).append(new_value);
+                                new_html = $(value);
                                 return false;
                             }
                         })
@@ -1051,8 +1058,11 @@ function PMA_unInlineEditRow($del_hide, $chg_submit, $this_td, $input_siblings, 
 function PMA_changeClassForColumn($this_th, newclass) {
     // index 0 is the th containing the big T
     var th_index = $this_th.index();
+    var has_big_t = !$this_th.closest('tr').children(':first').hasClass('column_heading');
     // .eq() is zero-based
-    th_index--;
+    if (has_big_t) {
+        th_index--;
+    }
     var $tds = $this_th.closest('table').find('tbody tr').find('td.data:eq('+th_index+')');
     if ($this_th.data('has_class_'+newclass)) {
         $tds.removeClass(newclass);
